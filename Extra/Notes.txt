@@ -1,0 +1,9 @@
+- Solution, Right button, Manage nuget packages
+- Restore
+(Feature is called "Package restore")
+
+Redist:
+https://github.com/cefsharp/CefSharp/wiki/Output-files-description-table-(Redistribution)
+(Any better methods? What is "CefSharp redist?")
+
+Omit nuget: https://docs.microsoft.com/en-us/nuget/consume-packages/packages-and-source-control
