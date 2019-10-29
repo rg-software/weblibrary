@@ -121,37 +121,37 @@ namespace WebLibrary.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int ColName_Width {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SortByColumn {
             get {
-                return ((int)(this["ColName_Width"]));
+                return ((int)(this["SortByColumn"]));
             }
             set {
-                this["ColName_Width"] = value;
+                this["SortByColumn"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public int ColType_Width {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReverseSort {
             get {
-                return ((int)(this["ColType_Width"]));
+                return ((bool)(this["ReverseSort"]));
             }
             set {
-                this["ColType_Width"] = value;
+                this["ReverseSort"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public int ColDate_Width {
+        [global::System.Configuration.DefaultSettingValueAttribute("200,50,80,20")]
+        public string ColWidths {
             get {
-                return ((int)(this["ColDate_Width"]));
+                return ((string)(this["ColWidths"]));
             }
             set {
-                this["ColDate_Width"] = value;
+                this["ColWidths"] = value;
             }
         }
     }

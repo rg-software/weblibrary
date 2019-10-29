@@ -130,6 +130,7 @@
             this.lvArticles.TabIndex = 0;
             this.lvArticles.UseCompatibleStateImageBehavior = false;
             this.lvArticles.View = System.Windows.Forms.View.Details;
+            this.lvArticles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvArticles_ColumnClick);
             this.lvArticles.SelectedIndexChanged += new System.EventHandler(this.lvArticles_SelectedIndexChanged);
             // 
             // toolStrip1

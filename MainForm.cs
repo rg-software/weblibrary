@@ -2,7 +2,6 @@
 //
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
-//using WebLibrary.Controls;
 using CefSharp.WinForms;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,10 @@ namespace WebLibrary
     public partial class MainForm : Form
     {
         private readonly ChromiumWebBrowser mBrowser;
-        private List<string> mArticles = new List<string>();
+        private ArticleList mArticles;
+        //private List<string> mArticles = new List<string>();
+        //self.SortByColumn = 0
+        //self.ReverseSort = False
 
         private void FillLibTree(string path, TreeNodeCollection nodes)
         {
@@ -34,48 +36,6 @@ namespace WebLibrary
             }
         }
 
-        private void InitializeArticles(int ColNameWidth, int ColTypeWidth, int ColDateWidth)
-        {
-            lvArticles.Clear();
-
-            lvArticles.Columns.Add("Name");
-            lvArticles.Columns.Add("Type");
-            lvArticles.Columns.Add("Date");
-
-            // $mm TODO: add "Read" and "Starred" columns
-            // use {RS} tags in the name
-            // show progress indicator
-            lvArticles.Columns[0].Width = ColNameWidth; // use arrays here
-            lvArticles.Columns[1].Width = ColTypeWidth;
-            lvArticles.Columns[2].Width = ColDateWidth;
-        }
-
-        private void FillArticles(string path)
-        {
-            mArticles.Clear();
-
-            lvArticles.BeginUpdate();
-            InitializeArticles(lvArticles.Columns[0].Width, lvArticles.Columns[1].Width, lvArticles.Columns[2].Width);
-
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
-            var files = dirInfo.GetFiles().OrderBy(d => d.Name);
-
-            foreach (FileInfo file in files)
-            {
-                mArticles.Add(file.Name);
-
-                var extension = Path.GetExtension(file.Name);
-                if (extension.StartsWith("."))
-                    extension = extension.Substring(1);
-
-                ListViewItem item = new ListViewItem(Path.GetFileNameWithoutExtension(file.Name));
-                item.SubItems.Add(extension);
-                item.SubItems.Add(file.CreationTime.ToShortDateString());
-                lvArticles.Items.Add(item);
-            }
-
-            lvArticles.EndUpdate();
-        }
 
         public MainForm()
         {
@@ -97,7 +57,9 @@ namespace WebLibrary
             vertSplitter.SplitterDistance = settings.VSplitterDistance;
             WindowState = settings.IsMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
 
-            InitializeArticles(settings.ColName_Width, settings.ColType_Width, settings.ColDate_Width);
+            int[] colWidths = settings.ColWidths.Split(',').Select(s => Int32.Parse(s)).ToArray();
+            mArticles = new ArticleList(settings.SortByColumn, settings.ReverseSort, lvArticles);
+            mArticles.InitializeColWidths(colWidths);
 
             if (!Directory.Exists(settings.LibHome))
                 ChooseLibFolder();
@@ -240,9 +202,14 @@ namespace WebLibrary
             settings.HSplitterDistance = horizSplitter.SplitterDistance;
             settings.VSplitterDistance = vertSplitter.SplitterDistance;
             settings.IsMaximized = (WindowState == FormWindowState.Maximized);
-            settings.ColName_Width = lvArticles.Columns[0].Width;
-            settings.ColType_Width = lvArticles.Columns[1].Width;
-            settings.ColDate_Width = lvArticles.Columns[2].Width;
+
+            int[] colWidths = new int[lvArticles.Columns.Count];
+            for (int i = 0; i < colWidths.Length; ++i)
+                colWidths[i] = lvArticles.Columns[i].Width;
+
+            settings.ColWidths = String.Join(",", colWidths.Select(i => i.ToString()).ToArray());
+            settings.SortByColumn = mArticles.SortByColumn;
+            settings.ReverseSort = mArticles.ReverseSort;
             settings.Save();
         }
 
@@ -263,7 +230,7 @@ namespace WebLibrary
 
         private void tvLibTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            FillArticles(Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text));
+            mArticles.FillArticles(Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text));
         }
 
         private void lvArticles_SelectedIndexChanged(object sender, EventArgs e)
@@ -271,10 +238,15 @@ namespace WebLibrary
             if (lvArticles.SelectedItems.Count > 0)
             {
                 var idx = lvArticles.SelectedIndices[0];
-                var path = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text, mArticles[idx]);
+                var path = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text, mArticles.FileName(idx));
                 var url = "file:///" + path.Replace('\\', '/');
                 mBrowser.Load(url);
             }
+        }
+
+        private void lvArticles_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            mArticles.HandleColumnClick(e.Column);
         }
     }
 }
