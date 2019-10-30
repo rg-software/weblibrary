@@ -35,14 +35,15 @@
             this.horizSplitter = new System.Windows.Forms.SplitContainer();
             this.lvArticles = new System.Windows.Forms.ListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.backButton = new System.Windows.Forms.ToolStripButton();
-            this.forwardButton = new System.Windows.Forms.ToolStripButton();
             this.urlTextBox = new System.Windows.Forms.ToolStripTextBox();
-            this.goButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miChooseLibFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
+            this.backButton = new System.Windows.Forms.ToolStripButton();
+            this.forwardButton = new System.Windows.Forms.ToolStripButton();
+            this.goButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -139,6 +140,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnFavorite,
             this.backButton,
             this.forwardButton,
             this.urlTextBox,
@@ -151,41 +153,12 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Layout += new System.Windows.Forms.LayoutEventHandler(this.HandleToolStripLayout);
             // 
-            // backButton
-            // 
-            this.backButton.Enabled = false;
-            this.backButton.Image = global::WebLibrary.Properties.Resources.nav_left_green;
-            this.backButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(64, 24);
-            this.backButton.Text = "Back";
-            this.backButton.Click += new System.EventHandler(this.BackButtonClick);
-            // 
-            // forwardButton
-            // 
-            this.forwardButton.Enabled = false;
-            this.forwardButton.Image = global::WebLibrary.Properties.Resources.nav_right_green;
-            this.forwardButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.forwardButton.Name = "forwardButton";
-            this.forwardButton.Size = new System.Drawing.Size(87, 24);
-            this.forwardButton.Text = "Forward";
-            this.forwardButton.Click += new System.EventHandler(this.ForwardButtonClick);
-            // 
             // urlTextBox
             // 
             this.urlTextBox.AutoSize = false;
             this.urlTextBox.Name = "urlTextBox";
             this.urlTextBox.Size = new System.Drawing.Size(500, 25);
             this.urlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UrlTextBoxKeyUp);
-            // 
-            // goButton
-            // 
-            this.goButton.Image = global::WebLibrary.Properties.Resources.nav_plain_green;
-            this.goButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(52, 24);
-            this.goButton.Text = "Go";
-            this.goButton.Click += new System.EventHandler(this.GoButtonClick);
             // 
             // menuStrip1
             // 
@@ -221,6 +194,44 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
+            // 
+            // btnFavorite
+            // 
+            this.btnFavorite.Image = global::WebLibrary.Properties.Resources.star;
+            this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFavorite.Name = "btnFavorite";
+            this.btnFavorite.Size = new System.Drawing.Size(85, 24);
+            this.btnFavorite.Text = "Favorite";
+            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
+            // 
+            // backButton
+            // 
+            this.backButton.Enabled = false;
+            this.backButton.Image = global::WebLibrary.Properties.Resources.nav_left_green;
+            this.backButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(64, 24);
+            this.backButton.Text = "Back";
+            this.backButton.Click += new System.EventHandler(this.BackButtonClick);
+            // 
+            // forwardButton
+            // 
+            this.forwardButton.Enabled = false;
+            this.forwardButton.Image = global::WebLibrary.Properties.Resources.nav_right_green;
+            this.forwardButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.forwardButton.Name = "forwardButton";
+            this.forwardButton.Size = new System.Drawing.Size(87, 24);
+            this.forwardButton.Text = "Forward";
+            this.forwardButton.Click += new System.EventHandler(this.ForwardButtonClick);
+            // 
+            // goButton
+            // 
+            this.goButton.Image = global::WebLibrary.Properties.Resources.nav_plain_green;
+            this.goButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.goButton.Name = "goButton";
+            this.goButton.Size = new System.Drawing.Size(52, 24);
+            this.goButton.Text = "Go";
+            this.goButton.Click += new System.EventHandler(this.GoButtonClick);
             // 
             // MainForm
             // 
@@ -272,5 +283,6 @@
         private System.Windows.Forms.SplitContainer horizSplitter;
         private System.Windows.Forms.TreeView tvLibTree;
         private System.Windows.Forms.ListView lvArticles;
+        private System.Windows.Forms.ToolStripButton btnFavorite;
     }
 }

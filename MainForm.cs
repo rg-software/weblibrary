@@ -248,5 +248,15 @@ namespace WebLibrary
         {
             mArticles.HandleColumnClick(e.Column);
         }
+
+        private void btnFavorite_Click(object sender, EventArgs e)
+        {
+            if (lvArticles.SelectedItems.Count > 0)
+            {
+                var idx = lvArticles.SelectedIndices[0];
+                var path = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text);
+                mArticles.ToggleFavorite(path, idx);
+            }
+        }
     }
 }

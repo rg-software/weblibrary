@@ -67,6 +67,26 @@ namespace WebLibrary
             mView.EndUpdate();
         }
 
+        private void SelectItemByFileName(string filename)
+        {
+            for (int i = 0; i < mList.Count; ++i)
+                if (mList[i].ArticleFileName == filename)
+                {
+                    mView.SelectedIndices.Clear();
+                    mView.SelectedIndices.Add(i);
+                    return;
+                }
+        }
+
+        public void ToggleFavorite(string path, int idx)    // $mm TODO: this list object should know its path...
+        {
+            var newFileName = mList[idx].MakeFileNameWithStar(!mList[idx].Starred);
+            System.IO.File.Move(Path.Combine(path, mList[idx].ArticleFileName), 
+                Path.Combine(path, newFileName));
+            FillArticles(path);
+            SelectItemByFileName(newFileName);
+        }
+
         public void InitializeColWidths(int[] colwidths)
         {
             string[] colNames = {"Name", "Type", "Date", "Favorite"};
@@ -137,6 +157,12 @@ namespace WebLibrary
                 CreationDate = creationDate;
             }
 
+            public string MakeFileNameWithStar(bool star)
+            {
+                string starstr = star ? "S" : "";
+                return $"{ArticleName}{{{starstr}}}.{ArticleType}";
+            }
+
             public string ArticleFileName;
             public string ArticleName;
             public string ArticleType;
@@ -146,7 +172,7 @@ namespace WebLibrary
 
         private const char up_arrow = '\u2191';
         private const char down_arrow = '\u2193';
-        private const char star_symbol = '\u2605';
+        private const char star_symbol = '\u2606';
         // checkmark: U+2713
         
         private string mLastPath;
