@@ -4,21 +4,18 @@
 
 using CefSharp.WinForms;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CefSharp;
 
+// $mm TODO: use FileSystemWatcher to monitor changes in the file system
 namespace WebLibrary
 {
     public partial class MainForm : Form
     {
         private readonly ChromiumWebBrowser mBrowser;
         private ArticleList mArticles;
-        //private List<string> mArticles = new List<string>();
-        //self.SortByColumn = 0
-        //self.ReverseSort = False
 
         private void FillLibTree(string path, TreeNodeCollection nodes)
         {
@@ -27,7 +24,7 @@ namespace WebLibrary
             
             foreach (DirectoryInfo dir in dirs)
             {
-                if (!dir.Name.StartsWith("."))   // don't show hidden directories
+                if (!dir.Name.StartsWith("."))   // don't show hidden directories -- $mm obsolete
                 {
                     TreeNode e = new TreeNode(dir.Name);
                     nodes.Add(e);
@@ -35,7 +32,6 @@ namespace WebLibrary
                 }
             }
         }
-
 
         public MainForm()
         {
@@ -88,7 +84,7 @@ namespace WebLibrary
         }
         */
 
-        private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs args)
+        private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs args)    // $mm TODO REMOVE
         {
             SetCanGoBack(args.CanGoBack);
             SetCanGoForward(args.CanGoForward);
@@ -101,22 +97,22 @@ namespace WebLibrary
             this.InvokeOnUiThreadIfRequired(() => Text = args.Title);
         }*/
 
-        private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs args)
+        private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs args)    // $mm TODO REMOVE
         {
             this.InvokeOnUiThreadIfRequired(() => urlTextBox.Text = args.Address);
         }
 
-        private void SetCanGoBack(bool canGoBack)
+        private void SetCanGoBack(bool canGoBack)    // $mm TODO REMOVE
         {
             this.InvokeOnUiThreadIfRequired(() => backButton.Enabled = canGoBack);
         }
 
-        private void SetCanGoForward(bool canGoForward)
+        private void SetCanGoForward(bool canGoForward)    // $mm TODO REMOVE
         {
             this.InvokeOnUiThreadIfRequired(() => forwardButton.Enabled = canGoForward);
         }
 
-        private void SetIsLoading(bool isLoading)
+        private void SetIsLoading(bool isLoading)    // $mm TODO REMOVE
         {
             goButton.Text = isLoading ?
                 "Stop" :
@@ -133,12 +129,12 @@ namespace WebLibrary
             // $mm this.InvokeOnUiThreadIfRequired(() => outputLabel.Text = output);
         //}
 
-        private void HandleToolStripLayout(object sender, LayoutEventArgs e)
+        private void HandleToolStripLayout(object sender, LayoutEventArgs e)    // $mm TODO REMOVE
         {
             HandleToolStripLayout();
         }
 
-        private void HandleToolStripLayout()
+        private void HandleToolStripLayout()    // $mm TODO REMOVE
         {
             var width = toolStrip1.Width;
             foreach (ToolStripItem item in toolStrip1.Items)
@@ -151,29 +147,29 @@ namespace WebLibrary
             urlTextBox.Width = Math.Max(0, width - urlTextBox.Margin.Horizontal - 18);
         }
 
-        private void ExitMenuItemClick(object sender, EventArgs e)
+        private void ExitMenuItemClick(object sender, EventArgs e)    // $mm TODO REMOVE
         {
             mBrowser.Dispose();
             Cef.Shutdown();
             Close();
         }
 
-        private void GoButtonClick(object sender, EventArgs e)
+        private void GoButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
         {
             LoadUrl(urlTextBox.Text);
         }
 
-        private void BackButtonClick(object sender, EventArgs e)
+        private void BackButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
         {
             mBrowser.Back();
         }
 
-        private void ForwardButtonClick(object sender, EventArgs e)
+        private void ForwardButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
         {
             mBrowser.Forward();
         }
 
-        private void UrlTextBoxKeyUp(object sender, KeyEventArgs e)
+        private void UrlTextBoxKeyUp(object sender, KeyEventArgs e)    // $mm TODO REMOVE
         {
             if (e.KeyCode != Keys.Enter)
             {
@@ -183,7 +179,7 @@ namespace WebLibrary
             LoadUrl(urlTextBox.Text);
         }
 
-        private void LoadUrl(string url)
+        private void LoadUrl(string url)    // $mm TODO REMOVE
         {
             if (Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
             {
@@ -227,7 +223,6 @@ namespace WebLibrary
             }
         }
 
-
         private void tvLibTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             mArticles.FillArticles(Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text));
@@ -238,7 +233,7 @@ namespace WebLibrary
             if (lvArticles.SelectedItems.Count > 0)
             {
                 var idx = lvArticles.SelectedIndices[0];
-                var path = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text, mArticles.FileName(idx));
+                var path = mArticles.GetFullPath(idx);
                 var url = "file:///" + path.Replace('\\', '/');
                 mBrowser.Load(url);
             }
@@ -251,12 +246,12 @@ namespace WebLibrary
 
         private void btnFavorite_Click(object sender, EventArgs e)
         {
-            if (lvArticles.SelectedItems.Count > 0)
-            {
-                var idx = lvArticles.SelectedIndices[0];
-                var path = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text);
-                mArticles.ToggleFavorite(path, idx);
-            }
+            mArticles.ToggleFavorite(lvArticles.SelectedIndices[0]);
+        }
+
+        private void btnRead_Click(object sender, EventArgs e)
+        {
+            mArticles.ToggleRead(lvArticles.SelectedIndices[0]);
         }
     }
 }

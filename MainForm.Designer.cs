@@ -40,6 +40,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miChooseLibFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnRead = new System.Windows.Forms.ToolStripButton();
             this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.backButton = new System.Windows.Forms.ToolStripButton();
             this.forwardButton = new System.Windows.Forms.ToolStripButton();
@@ -100,6 +101,7 @@
             // tvLibTree
             // 
             this.tvLibTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvLibTree.Font = new System.Drawing.Font("Meiryo UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tvLibTree.Location = new System.Drawing.Point(0, 0);
             this.tvLibTree.Name = "tvLibTree";
             this.tvLibTree.Size = new System.Drawing.Size(324, 548);
@@ -123,6 +125,7 @@
             // lvArticles
             // 
             this.lvArticles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvArticles.Font = new System.Drawing.Font("Meiryo UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lvArticles.HideSelection = false;
             this.lvArticles.LabelEdit = true;
             this.lvArticles.Location = new System.Drawing.Point(0, 0);
@@ -140,6 +143,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnRead,
             this.btnFavorite,
             this.backButton,
             this.forwardButton,
@@ -194,6 +198,15 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
+            // 
+            // btnRead
+            // 
+            this.btnRead.Image = global::WebLibrary.Properties.Resources.checkmark;
+            this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRead.Name = "btnRead";
+            this.btnRead.Size = new System.Drawing.Size(67, 24);
+            this.btnRead.Text = "Read";
+            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
             // 
             // btnFavorite
             // 
@@ -284,5 +297,6 @@
         private System.Windows.Forms.TreeView tvLibTree;
         private System.Windows.Forms.ListView lvArticles;
         private System.Windows.Forms.ToolStripButton btnFavorite;
+        private System.Windows.Forms.ToolStripButton btnRead;
     }
 }
