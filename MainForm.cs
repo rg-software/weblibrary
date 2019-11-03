@@ -16,6 +16,7 @@ namespace WebLibrary
     {
         private readonly ChromiumWebBrowser mBrowser;
         private ArticleList mArticles;
+        //private FileSystemWatcher mWatcher = new FileSystemWatcher();
 
         private void FillLibTree(string path, TreeNodeCollection nodes)
         {
@@ -65,6 +66,9 @@ namespace WebLibrary
             tvLibTree.EndUpdate();
             if (tvLibTree.Nodes.Count > 0)
                 tvLibTree.SelectedNode = tvLibTree.Nodes[0];
+
+            //mWatcher.Path = settings.LibHome;
+            //mWatcher.NotifyFilter = notif
         }
 
         private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
@@ -225,7 +229,7 @@ namespace WebLibrary
 
         private void tvLibTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            mArticles.FillArticles(Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.Text));
+            mArticles.FillArticles(Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.FullPath));
         }
 
         private void lvArticles_SelectedIndexChanged(object sender, EventArgs e)

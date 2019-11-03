@@ -2,17 +2,21 @@
 //
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace WebLibrary
 {
     class ArticleList
     {
-        private static string[] ColumnNames = { "Name", "Type", "Date", "Favorite", "Read" };
+        private static Dictionary<ArticleInfo.ColumnType, string> ColumnNames = 
+                                new Dictionary<ArticleInfo.ColumnType, string>(){
+                                    { ArticleInfo.ColumnType.Name, "Name"},
+                                    { ArticleInfo.ColumnType.Type, "Type"},
+                                    { ArticleInfo.ColumnType.Date, "Date"},
+                                    { ArticleInfo.ColumnType.Favorite, "Favorite"},
+                                    { ArticleInfo.ColumnType.Read, "Read" }};
 
         public ArticleList(int sortByColumn, bool reverseSort, ListView view)
         {
@@ -36,8 +40,8 @@ namespace WebLibrary
 
         private ListViewItem makeListViewItem(ArticleInfo e)
         {
-            ListViewItem item = new ListViewItem(e.GetField(0).ToString());//   e.ArticleName);
-            for (int i = 1; i < ColumnNames.Length; ++i)
+            ListViewItem item = new ListViewItem(e.GetField(0).ToString());
+            for (int i = 1; i < ColumnNames.Count; ++i)
                 item.SubItems.Add(e.GetField((ArticleInfo.ColumnType)i).ToString());
             return item;
         }
@@ -104,9 +108,9 @@ namespace WebLibrary
             mList.Clear();
             mView.Clear();
 
-            for (int i = 0; i < ColumnNames.Length; ++i)
+            for (int i = 0; i < ColumnNames.Count; ++i)
             {
-                string caption = ColumnNames[i];
+                string caption = ColumnNames[(ArticleInfo.ColumnType)i];
                 if (SortByColumn == i)
                     caption += " " + (ReverseSort ? down_arrow : up_arrow);
                 mView.Columns.Add(caption);
@@ -140,6 +144,7 @@ namespace WebLibrary
         private string mCurrentPath;
         private ListView mView;
         private List<ArticleInfo> mList = new List<ArticleInfo>();
+
         public int SortByColumn { get; private set; }
         public bool ReverseSort { get; private set; }
     }
