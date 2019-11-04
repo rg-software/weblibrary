@@ -76,6 +76,9 @@ namespace WebLibrary
                 {
                     mView.SelectedIndices.Clear();
                     mView.SelectedIndices.Add(i);
+                    mView.FocusedItem = mView.Items[i];
+                    mView.EnsureVisible(i);
+                    mView.Select();
                     return;
                 }
         }
@@ -85,12 +88,34 @@ namespace WebLibrary
             return Path.Combine(mCurrentPath, mList[idx].FileName);
         }
 
+        private void renameFileCore(int idx, string newFileName)
+        {
+            // $mm todo: make sure this code doesn't corrupt files
+            // (it seems it can... perhaps, we must wait for the file operation to complete before proceeding)
+            // try this: https://stackoverflow.com/questions/14162983/system-io-file-move-how-to-wait-for-move-completion
+            const int retries = 3;
+            const int timeout = 1000;   // ms
+
+            for (int i = 0; i < retries; ++i)
+            {
+                try
+                {
+                    File.Move(Path.Combine(mCurrentPath, mList[idx].FileName), Path.Combine(mCurrentPath, newFileName));
+                    FillArticles(mCurrentPath);
+                    selectItemByFileName(newFileName);
+                    return;
+                }
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(timeout);
+                }
+            }
+            throw new IOException("Cannot rename file");
+        }
+
         private void toggleTag(int idx, string tag)
         {
-            var newFileName = mList[idx].FileNameWithTagToggled(tag);
-            File.Move(Path.Combine(mCurrentPath, mList[idx].FileName), Path.Combine(mCurrentPath, newFileName));
-            FillArticles(mCurrentPath);
-            selectItemByFileName(newFileName);
+            renameFileCore(idx, mList[idx].FileNameWithTagToggled(tag));
         }
 
         public void ToggleRead(int idx)
@@ -101,6 +126,11 @@ namespace WebLibrary
         public void ToggleFavorite(int idx)
         {
             toggleTag(idx, ArticleInfo.StarTag);
+        }
+
+        public void RenameItem(int idx, string newName)
+        {
+            renameFileCore(idx, mList[idx].FileNameWithNewName(newName));
         }
 
         public void InitializeColWidths(int[] colwidths)

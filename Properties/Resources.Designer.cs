@@ -83,6 +83,16 @@ namespace WebLibrary.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap down_button {
+            get {
+                object obj = ResourceManager.GetObject("down-button", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap nav_left_green {
             get {
                 object obj = ResourceManager.GetObject("nav_left_green", resourceCulture);
@@ -126,6 +136,16 @@ namespace WebLibrary.Properties {
         internal static System.Drawing.Bitmap star {
             get {
                 object obj = ResourceManager.GetObject("star", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap up_button {
+            get {
+                object obj = ResourceManager.GetObject("up_button", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -35,16 +35,16 @@
             this.horizSplitter = new System.Windows.Forms.SplitContainer();
             this.lvArticles = new System.Windows.Forms.ListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.urlTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.btnRead = new System.Windows.Forms.ToolStripButton();
+            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miChooseLibFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnRead = new System.Windows.Forms.ToolStripButton();
-            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
-            this.backButton = new System.Windows.Forms.ToolStripButton();
-            this.forwardButton = new System.Windows.Forms.ToolStripButton();
-            this.goButton = new System.Windows.Forms.ToolStripButton();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleFavoriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fsWatcher = new System.IO.FileSystemWatcher();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -57,6 +57,7 @@
             this.horizSplitter.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fsWatcher)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripContainer
@@ -102,6 +103,7 @@
             // 
             this.tvLibTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvLibTree.Font = new System.Drawing.Font("Meiryo UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tvLibTree.HideSelection = false;
             this.tvLibTree.Location = new System.Drawing.Point(0, 0);
             this.tvLibTree.Name = "tvLibTree";
             this.tvLibTree.Size = new System.Drawing.Size(324, 548);
@@ -129,13 +131,16 @@
             this.lvArticles.HideSelection = false;
             this.lvArticles.LabelEdit = true;
             this.lvArticles.Location = new System.Drawing.Point(0, 0);
+            this.lvArticles.MultiSelect = false;
             this.lvArticles.Name = "lvArticles";
             this.lvArticles.Size = new System.Drawing.Size(645, 215);
             this.lvArticles.TabIndex = 0;
             this.lvArticles.UseCompatibleStateImageBehavior = false;
             this.lvArticles.View = System.Windows.Forms.View.Details;
+            this.lvArticles.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lvArticles_AfterLabelEdit);
             this.lvArticles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvArticles_ColumnClick);
             this.lvArticles.SelectedIndexChanged += new System.EventHandler(this.lvArticles_SelectedIndexChanged);
+            this.lvArticles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvArticles_KeyDown);
             // 
             // toolStrip1
             // 
@@ -144,31 +149,38 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRead,
-            this.btnFavorite,
-            this.backButton,
-            this.forwardButton,
-            this.urlTextBox,
-            this.goButton});
+            this.btnFavorite});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
             this.toolStrip1.Size = new System.Drawing.Size(973, 27);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Layout += new System.Windows.Forms.LayoutEventHandler(this.HandleToolStripLayout);
             // 
-            // urlTextBox
+            // btnRead
             // 
-            this.urlTextBox.AutoSize = false;
-            this.urlTextBox.Name = "urlTextBox";
-            this.urlTextBox.Size = new System.Drawing.Size(500, 25);
-            this.urlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UrlTextBoxKeyUp);
+            this.btnRead.Image = global::WebLibrary.Properties.Resources.checkmark;
+            this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRead.Name = "btnRead";
+            this.btnRead.Size = new System.Drawing.Size(67, 24);
+            this.btnRead.Text = "Read";
+            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
+            // 
+            // btnFavorite
+            // 
+            this.btnFavorite.Image = global::WebLibrary.Properties.Resources.star;
+            this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFavorite.Name = "btnFavorite";
+            this.btnFavorite.Size = new System.Drawing.Size(85, 24);
+            this.btnFavorite.Text = "Favorite";
+            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
             // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
@@ -199,52 +211,37 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
             // 
-            // btnRead
+            // editToolStripMenuItem
             // 
-            this.btnRead.Image = global::WebLibrary.Properties.Resources.checkmark;
-            this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRead.Name = "btnRead";
-            this.btnRead.Size = new System.Drawing.Size(67, 24);
-            this.btnRead.Text = "Read";
-            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toggleReadToolStripMenuItem,
+            this.toggleFavoriteToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
+            this.editToolStripMenuItem.Text = "Edit";
             // 
-            // btnFavorite
+            // toggleReadToolStripMenuItem
             // 
-            this.btnFavorite.Image = global::WebLibrary.Properties.Resources.star;
-            this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFavorite.Name = "btnFavorite";
-            this.btnFavorite.Size = new System.Drawing.Size(85, 24);
-            this.btnFavorite.Text = "Favorite";
-            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
+            this.toggleReadToolStripMenuItem.Name = "toggleReadToolStripMenuItem";
+            this.toggleReadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.toggleReadToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
+            this.toggleReadToolStripMenuItem.Text = "Toggle Read";
+            this.toggleReadToolStripMenuItem.Click += new System.EventHandler(this.btnRead_Click);
             // 
-            // backButton
+            // toggleFavoriteToolStripMenuItem
             // 
-            this.backButton.Enabled = false;
-            this.backButton.Image = global::WebLibrary.Properties.Resources.nav_left_green;
-            this.backButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(64, 24);
-            this.backButton.Text = "Back";
-            this.backButton.Click += new System.EventHandler(this.BackButtonClick);
+            this.toggleFavoriteToolStripMenuItem.Name = "toggleFavoriteToolStripMenuItem";
+            this.toggleFavoriteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.toggleFavoriteToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
+            this.toggleFavoriteToolStripMenuItem.Text = "Toggle Favorite";
+            this.toggleFavoriteToolStripMenuItem.Click += new System.EventHandler(this.btnFavorite_Click);
             // 
-            // forwardButton
+            // fsWatcher
             // 
-            this.forwardButton.Enabled = false;
-            this.forwardButton.Image = global::WebLibrary.Properties.Resources.nav_right_green;
-            this.forwardButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.forwardButton.Name = "forwardButton";
-            this.forwardButton.Size = new System.Drawing.Size(87, 24);
-            this.forwardButton.Text = "Forward";
-            this.forwardButton.Click += new System.EventHandler(this.ForwardButtonClick);
-            // 
-            // goButton
-            // 
-            this.goButton.Image = global::WebLibrary.Properties.Resources.nav_plain_green;
-            this.goButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(52, 24);
-            this.goButton.Text = "Go";
-            this.goButton.Click += new System.EventHandler(this.GoButtonClick);
+            this.fsWatcher.EnableRaisingEvents = true;
+            this.fsWatcher.IncludeSubdirectories = true;
+            this.fsWatcher.SynchronizingObject = this;
+            this.fsWatcher.Changed += new System.IO.FileSystemEventHandler(this.fsWatcher_Changed);
             // 
             // MainForm
             // 
@@ -259,6 +256,7 @@
             this.Name = "MainForm";
             this.Text = "WebLibrary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
             this.toolStripContainer.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.TopToolStripPanel.PerformLayout();
@@ -275,6 +273,7 @@
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fsWatcher)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,10 +283,6 @@
 
         private System.Windows.Forms.ToolStripContainer toolStripContainer;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton backButton;
-        private System.Windows.Forms.ToolStripButton forwardButton;
-        private System.Windows.Forms.ToolStripTextBox urlTextBox;
-        private System.Windows.Forms.ToolStripButton goButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -298,5 +293,9 @@
         private System.Windows.Forms.ListView lvArticles;
         private System.Windows.Forms.ToolStripButton btnFavorite;
         private System.Windows.Forms.ToolStripButton btnRead;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleReadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleFavoriteToolStripMenuItem;
+        private System.IO.FileSystemWatcher fsWatcher;
     }
 }

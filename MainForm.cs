@@ -9,14 +9,12 @@ using System.Linq;
 using System.Windows.Forms;
 using CefSharp;
 
-// $mm TODO: use FileSystemWatcher to monitor changes in the file system
 namespace WebLibrary
 {
     public partial class MainForm : Form
     {
         private readonly ChromiumWebBrowser mBrowser;
         private ArticleList mArticles;
-        //private FileSystemWatcher mWatcher = new FileSystemWatcher();
 
         private void FillLibTree(string path, TreeNodeCollection nodes)
         {
@@ -34,16 +32,22 @@ namespace WebLibrary
             }
         }
 
+        void updateLibTree()
+        {
+            tvLibTree.BeginUpdate();
+            tvLibTree.Nodes.Clear();
+            FillLibTree(Properties.Settings.Default.LibHome, tvLibTree.Nodes);
+            tvLibTree.EndUpdate();
+            if (tvLibTree.Nodes.Count > 0)
+                tvLibTree.SelectedNode = tvLibTree.Nodes[0];
+        }
+
         public MainForm()
         {
             InitializeComponent();
 
             mBrowser = new ChromiumWebBrowser("about:blank") { Dock = DockStyle.Fill };
-
             horizSplitter.Panel2.Controls.Add(mBrowser);
-            mBrowser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged;
-            mBrowser.LoadingStateChanged += OnLoadingStateChanged;
-            mBrowser.AddressChanged += OnBrowserAddressChanged;
 
             Properties.Settings settings = Properties.Settings.Default;
             Left = settings.MainForm_Left;
@@ -61,136 +65,15 @@ namespace WebLibrary
             if (!Directory.Exists(settings.LibHome))
                 ChooseLibFolder();
             
-            tvLibTree.BeginUpdate();
-            FillLibTree(settings.LibHome, tvLibTree.Nodes);
-            tvLibTree.EndUpdate();
-            if (tvLibTree.Nodes.Count > 0)
-                tvLibTree.SelectedNode = tvLibTree.Nodes[0];
-
-            //mWatcher.Path = settings.LibHome;
-            //mWatcher.NotifyFilter = notif
+            updateLibTree();
+            fsWatcher.Path = settings.LibHome;
         }
 
-        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
+        private void ExitMenuItemClick(object sender, EventArgs e)
         {
-            var b = ((ChromiumWebBrowser)sender);
-            this.InvokeOnUiThreadIfRequired(() => b.Focus());
-        }
-
-/*        private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs args)
-        {
-            DisplayOutput(string.Format("Line: {0}, Source: {1}, Message: {2}", args.Line, args.Source, args.Message));
-        }
-
-        private void OnBrowserStatusMessage(object sender, StatusMessageEventArgs args)
-        {
-            //$mm this.InvokeOnUiThreadIfRequired(() => statusLabel.Text = args.Value);
-        }
-        */
-
-        private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs args)    // $mm TODO REMOVE
-        {
-            SetCanGoBack(args.CanGoBack);
-            SetCanGoForward(args.CanGoForward);
-
-            this.InvokeOnUiThreadIfRequired(() => SetIsLoading(!args.CanReload));
-        }
-
-        /*private void OnBrowserTitleChanged(object sender, TitleChangedEventArgs args)
-        {
-            this.InvokeOnUiThreadIfRequired(() => Text = args.Title);
-        }*/
-
-        private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs args)    // $mm TODO REMOVE
-        {
-            this.InvokeOnUiThreadIfRequired(() => urlTextBox.Text = args.Address);
-        }
-
-        private void SetCanGoBack(bool canGoBack)    // $mm TODO REMOVE
-        {
-            this.InvokeOnUiThreadIfRequired(() => backButton.Enabled = canGoBack);
-        }
-
-        private void SetCanGoForward(bool canGoForward)    // $mm TODO REMOVE
-        {
-            this.InvokeOnUiThreadIfRequired(() => forwardButton.Enabled = canGoForward);
-        }
-
-        private void SetIsLoading(bool isLoading)    // $mm TODO REMOVE
-        {
-            goButton.Text = isLoading ?
-                "Stop" :
-                "Go";
-            goButton.Image = isLoading ?
-                Properties.Resources.nav_plain_red :
-                Properties.Resources.nav_plain_green;
-
-            HandleToolStripLayout();
-        }
-
-        //public void DisplayOutput(string output)
-        //{
-            // $mm this.InvokeOnUiThreadIfRequired(() => outputLabel.Text = output);
-        //}
-
-        private void HandleToolStripLayout(object sender, LayoutEventArgs e)    // $mm TODO REMOVE
-        {
-            HandleToolStripLayout();
-        }
-
-        private void HandleToolStripLayout()    // $mm TODO REMOVE
-        {
-            var width = toolStrip1.Width;
-            foreach (ToolStripItem item in toolStrip1.Items)
-            {
-                if (item != urlTextBox)
-                {
-                    width -= item.Width - item.Margin.Horizontal;
-                }
-            }
-            urlTextBox.Width = Math.Max(0, width - urlTextBox.Margin.Horizontal - 18);
-        }
-
-        private void ExitMenuItemClick(object sender, EventArgs e)    // $mm TODO REMOVE
-        {
-            mBrowser.Dispose();
-            Cef.Shutdown();
             Close();
         }
-
-        private void GoButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
-        {
-            LoadUrl(urlTextBox.Text);
-        }
-
-        private void BackButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
-        {
-            mBrowser.Back();
-        }
-
-        private void ForwardButtonClick(object sender, EventArgs e)    // $mm TODO REMOVE
-        {
-            mBrowser.Forward();
-        }
-
-        private void UrlTextBoxKeyUp(object sender, KeyEventArgs e)    // $mm TODO REMOVE
-        {
-            if (e.KeyCode != Keys.Enter)
-            {
-                return;
-            }
-
-            LoadUrl(urlTextBox.Text);
-        }
-
-        private void LoadUrl(string url)    // $mm TODO REMOVE
-        {
-            if (Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
-            {
-                mBrowser.Load(url);
-            }
-        }
-
+        
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings settings = Properties.Settings.Default;
@@ -234,7 +117,7 @@ namespace WebLibrary
 
         private void lvArticles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvArticles.SelectedItems.Count > 0)
+            if (lvArticles.SelectedIndices.Count > 0)
             {
                 var idx = lvArticles.SelectedIndices[0];
                 var path = mArticles.GetFullPath(idx);
@@ -256,6 +139,39 @@ namespace WebLibrary
         private void btnRead_Click(object sender, EventArgs e)
         {
             mArticles.ToggleRead(lvArticles.SelectedIndices[0]);
+        }
+
+        private void lvArticles_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Label))
+                mArticles.RenameItem(e.Item, e.Label);
+        }
+
+        private void fsWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            // $mm TODO this is not so simple: we should not react to events generated inside our app
+            // and multiple events can be generated during a file operation
+            // it may cause data loss, so we should be extra careful
+            // updateLibTree();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mBrowser.Dispose();
+            Cef.Shutdown();
+        }
+
+        private void lvArticles_KeyDown(object sender, KeyEventArgs e)
+        {
+            KeyEvent k = new KeyEvent();
+            if(e.Shift)
+                k.Modifiers = CefEventFlags.ShiftDown; 
+            
+            k.WindowsKeyCode = e.KeyValue;
+            k.FocusOnEditableField = true;
+            k.IsSystemKey = false;
+            k.Type = KeyEventType.Char;
+            mBrowser.GetBrowser().GetHost().SendKeyEvent(k);
         }
     }
 }

@@ -63,6 +63,20 @@ namespace WebLibrary
             return Tags.Contains(tag);
         }
 
+        private string formFileName(string name, string type, HashSet<string> tags)
+        {
+            var tagstring = String.Join(",", tags);
+            if (tagstring.Length > 0)
+                tagstring = "{" + tagstring + "}";
+
+            return $"{name}{tagstring}.{type}";
+        }
+
+        public string FileNameWithNewName(string newName)
+        {
+            return formFileName(newName, ArticleType, Tags);
+        }
+
         public string FileNameWithTagToggled(string tag)
         {
             var tags = new HashSet<string>(Tags);
@@ -71,11 +85,7 @@ namespace WebLibrary
             else
                 tags.Add(tag);
 
-            var tagstring = String.Join(",", tags);
-            if (tagstring.Length > 0)
-                tagstring = "{" + tagstring + "}";
-            
-            return $"{ArticleName}{tagstring}.{ArticleType}";
+            return formFileName(ArticleName, ArticleType, tags);
         }
 
         public IComparable GetField(ColumnType colType)
