@@ -241,7 +241,9 @@
             this.fsWatcher.EnableRaisingEvents = true;
             this.fsWatcher.IncludeSubdirectories = true;
             this.fsWatcher.SynchronizingObject = this;
-            this.fsWatcher.Changed += new System.IO.FileSystemEventHandler(this.fsWatcher_Changed);
+            this.fsWatcher.Created += new System.IO.FileSystemEventHandler(this.fsWatcher_Created);
+            this.fsWatcher.Deleted += new System.IO.FileSystemEventHandler(this.fsWatcher_Deleted);
+            this.fsWatcher.Renamed += new System.IO.RenamedEventHandler(this.fsWatcher_Renamed);
             // 
             // MainForm
             // 

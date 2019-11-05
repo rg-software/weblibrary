@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WebLibrary
@@ -18,9 +19,10 @@ namespace WebLibrary
                                     { ArticleInfo.ColumnType.Favorite, "Favorite"},
                                     { ArticleInfo.ColumnType.Read, "Read" }};
 
-        public ArticleList(int sortByColumn, bool reverseSort, ListView view)
+        public ArticleList(int sortByColumn, bool reverseSort, ListView view, FileSystemWatcher fsw)
         {
             mView = view;
+            mFSWatcher = fsw;
             SortByColumn = sortByColumn;
             ReverseSort = reverseSort;
         }
@@ -91,11 +93,11 @@ namespace WebLibrary
         private void renameFileCore(int idx, string newFileName)
         {
             // $mm todo: make sure this code doesn't corrupt files
-            // (it seems it can... perhaps, we must wait for the file operation to complete before proceeding)
-            // try this: https://stackoverflow.com/questions/14162983/system-io-file-move-how-to-wait-for-move-completion
-            const int retries = 3;
-            const int timeout = 1000;   // ms
+            const int retries = 20;
+            const int timeout = 100;   // ms (20*100 = 2 sec in total)
 
+            mFSWatcher.EnableRaisingEvents = false;
+            bool success = false;
             for (int i = 0; i < retries; ++i)
             {
                 try
@@ -103,14 +105,18 @@ namespace WebLibrary
                     File.Move(Path.Combine(mCurrentPath, mList[idx].FileName), Path.Combine(mCurrentPath, newFileName));
                     FillArticles(mCurrentPath);
                     selectItemByFileName(newFileName);
-                    return;
+                    success = true;
+                    break;
                 }
                 catch (IOException)
                 {
                     System.Threading.Thread.Sleep(timeout);
                 }
             }
-            throw new IOException("Cannot rename file");
+            if(!success)
+                throw new IOException("Cannot rename file");
+
+            mFSWatcher.EnableRaisingEvents = true;
         }
 
         private void toggleTag(int idx, string tag)
@@ -173,6 +179,7 @@ namespace WebLibrary
 
         private string mCurrentPath;
         private ListView mView;
+        private FileSystemWatcher mFSWatcher;
         private List<ArticleInfo> mList = new List<ArticleInfo>();
 
         public int SortByColumn { get; private set; }

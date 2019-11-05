@@ -59,7 +59,7 @@ namespace WebLibrary
             WindowState = settings.IsMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
 
             int[] colWidths = settings.ColWidths.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            mArticles = new ArticleList(settings.SortByColumn, settings.ReverseSort, lvArticles);
+            mArticles = new ArticleList(settings.SortByColumn, settings.ReverseSort, lvArticles, fsWatcher);
             mArticles.InitializeColWidths(colWidths);
 
             if (!Directory.Exists(settings.LibHome))
@@ -147,14 +147,6 @@ namespace WebLibrary
                 mArticles.RenameItem(e.Item, e.Label);
         }
 
-        private void fsWatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            // $mm TODO this is not so simple: we should not react to events generated inside our app
-            // and multiple events can be generated during a file operation
-            // it may cause data loss, so we should be extra careful
-            // updateLibTree();
-        }
-
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             mBrowser.Dispose();
@@ -172,6 +164,21 @@ namespace WebLibrary
             k.IsSystemKey = false;
             k.Type = KeyEventType.Char;
             mBrowser.GetBrowser().GetHost().SendKeyEvent(k);
+        }
+
+        private void fsWatcher_Created(object sender, FileSystemEventArgs e)
+        {
+            updateLibTree();
+        }
+
+        private void fsWatcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            updateLibTree();
+        }
+
+        private void fsWatcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            updateLibTree();
         }
     }
 }
