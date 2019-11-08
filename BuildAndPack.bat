@@ -1,10 +1,11 @@
 :: This script must be executed from MSVS Developer Command Prompt
 
 @echo off
-msbuild /t:restore
+msbuild /p:Configuration=Release /p:Platform=x64 /t:restore
 msbuild /p:Configuration=Release /p:Platform=x64
 
 rmdir /q /s Release
+del WebLibrary-x64.zip
 md Release
 md Release\locales
 
