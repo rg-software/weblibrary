@@ -159,7 +159,7 @@
             // 
             // btnRead
             // 
-            this.btnRead.Image = global::WebLibrary.Properties.Resources.checkmark;
+            this.btnRead.Image = global::WebLibraryApp.Properties.Resources.checkmark;
             this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRead.Name = "btnRead";
             this.btnRead.Size = new System.Drawing.Size(67, 24);
@@ -168,7 +168,7 @@
             // 
             // btnFavorite
             // 
-            this.btnFavorite.Image = global::WebLibrary.Properties.Resources.star;
+            this.btnFavorite.Image = global::WebLibraryApp.Properties.Resources.star;
             this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnFavorite.Name = "btnFavorite";
             this.btnFavorite.Size = new System.Drawing.Size(85, 24);
@@ -288,7 +288,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem miChooseLibFolder;
+        private System.Windows.Forms.ToolStripMenuItem miChooseLibFolder;
         private System.Windows.Forms.SplitContainer vertSplitter;
         private System.Windows.Forms.SplitContainer horizSplitter;
         private System.Windows.Forms.TreeView tvLibTree;

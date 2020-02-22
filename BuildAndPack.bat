@@ -1,10 +1,10 @@
 :: This script must be executed from MSVS Developer Command Prompt
 
 @echo off
-msbuild /p:Configuration=Release /p:Platform=x64 /t:restore
+nuget restore
 msbuild /p:Configuration=Release /p:Platform=x64
-
 rmdir /q /s Release
+
 del WebLibrary-x64.zip
 md Release
 md Release\locales
@@ -30,8 +30,8 @@ copy WebLibraryApp\bin\x64\Release\natives_blob.bin Release\
 copy WebLibraryApp\bin\x64\Release\snapshot_blob.bin Release\
 copy WebLibraryApp\bin\x64\Release\v8_context_snapshot.bin Release\
 
-copy WebLibraryApp\bin\x64\Release\WebLibrary.exe Release\
-copy WebLibraryApp\bin\x64\Release\WebLibrary.exe.config Release\
+copy WebLibraryApp\bin\x64\Release\WebLibraryApp.exe Release\
+copy WebLibraryApp\bin\x64\Release\WebLibraryApp.exe.config Release\
 
 powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('Release', 'WebLibrary-x64.zip'); }"
 rmdir /q /s Release

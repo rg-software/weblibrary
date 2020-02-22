@@ -1,6 +1,8 @@
 syntax: glob
 .vs/**
+WebLibraryApp/.vs/**
+WebLibraryApp/packages/**
+WebLibraryApp/bin/**
+WebLibraryApp/obj/**
+WebLibraryApp/*.user
 packages/**
-bin/**
-obj/**
-*.user
