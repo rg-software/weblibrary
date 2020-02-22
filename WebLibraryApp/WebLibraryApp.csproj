@@ -14,9 +14,9 @@
     <ProjectGuid>{C043FFF7-5F71-4FFC-989A-E09E18548589}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebLibrary</RootNamespace>
-    <AssemblyName>WebLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>WebLibraryApp</RootNamespace>
+    <AssemblyName>WebLibraryApp</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
