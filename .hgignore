@@ -6,3 +6,6 @@ WebLibraryApp/bin/**
 WebLibraryApp/obj/**
 WebLibraryApp/*.user
 packages/**
+WebLibraryDownloader/WebLibraryDownloader.csproj.user
+WebLibraryDownloader/obj/**
+WebLibraryDownloader/bin/**
