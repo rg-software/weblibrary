@@ -62,7 +62,7 @@ namespace WebLibrary
             mArticles = new ArticleList(settings.SortByColumn, settings.ReverseSort, lvArticles, fsWatcher);
             mArticles.InitializeColWidths(colWidths);
 
-            if (!Directory.Exists(settings.LibHome))
+            if (!Directory.Exists(settings.LibHome))    // $mm TODO: exit if no folder is chosen
                 ChooseLibFolder();
             
             updateLibTree();

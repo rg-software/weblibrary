@@ -33,6 +33,12 @@ copy WebLibraryApp\bin\x64\Release\v8_context_snapshot.bin Release\
 copy WebLibraryApp\bin\x64\Release\WebLibraryApp.exe Release\
 copy WebLibraryApp\bin\x64\Release\WebLibraryApp.exe.config Release\
 
+copy WebLibraryDownloader\SingleFile-master.zip Release\
+copy WebLibraryDownloader\bin\Release\WebLibraryDownloader.exe Release\
+copy WebLibraryDownloader\bin\Release\WebLibraryDownloader.exe.config Release\
+
+copy SetupWebLibrary.bat Release\
+
 powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('Release', 'WebLibrary-x64.zip'); }"
 rmdir /q /s Release
 echo WebLibrary-x64.zip file created.

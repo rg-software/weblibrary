@@ -35,8 +35,6 @@
             this.horizSplitter = new System.Windows.Forms.SplitContainer();
             this.lvArticles = new System.Windows.Forms.ListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnRead = new System.Windows.Forms.ToolStripButton();
-            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miChooseLibFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +43,8 @@
             this.toggleReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleFavoriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fsWatcher = new System.IO.FileSystemWatcher();
+            this.btnRead = new System.Windows.Forms.ToolStripButton();
+            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -157,6 +157,75 @@
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 0;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(973, 28);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miChooseLibFolder,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // miChooseLibFolder
+            // 
+            this.miChooseLibFolder.Name = "miChooseLibFolder";
+            this.miChooseLibFolder.Size = new System.Drawing.Size(236, 26);
+            this.miChooseLibFolder.Text = "Choose Library Folder";
+            this.miChooseLibFolder.Click += new System.EventHandler(this.miChooseLibFolder_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toggleReadToolStripMenuItem,
+            this.toggleFavoriteToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // toggleReadToolStripMenuItem
+            // 
+            this.toggleReadToolStripMenuItem.Name = "toggleReadToolStripMenuItem";
+            this.toggleReadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.toggleReadToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
+            this.toggleReadToolStripMenuItem.Text = "Toggle Read";
+            this.toggleReadToolStripMenuItem.Click += new System.EventHandler(this.btnRead_Click);
+            // 
+            // toggleFavoriteToolStripMenuItem
+            // 
+            this.toggleFavoriteToolStripMenuItem.Name = "toggleFavoriteToolStripMenuItem";
+            this.toggleFavoriteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.toggleFavoriteToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
+            this.toggleFavoriteToolStripMenuItem.Text = "Toggle Favorite";
+            this.toggleFavoriteToolStripMenuItem.Click += new System.EventHandler(this.btnFavorite_Click);
+            // 
+            // fsWatcher
+            // 
+            this.fsWatcher.EnableRaisingEvents = true;
+            this.fsWatcher.IncludeSubdirectories = true;
+            this.fsWatcher.SynchronizingObject = this;
+            this.fsWatcher.Created += new System.IO.FileSystemEventHandler(this.fsWatcher_Created);
+            this.fsWatcher.Deleted += new System.IO.FileSystemEventHandler(this.fsWatcher_Deleted);
+            this.fsWatcher.Renamed += new System.IO.RenamedEventHandler(this.fsWatcher_Renamed);
+            // 
             // btnRead
             // 
             this.btnRead.Image = global::WebLibraryApp.Properties.Resources.checkmark;
@@ -174,76 +243,6 @@
             this.btnFavorite.Size = new System.Drawing.Size(85, 24);
             this.btnFavorite.Text = "Favorite";
             this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(973, 28);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miChooseLibFolder,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // miChooseLibFolder
-            // 
-            this.miChooseLibFolder.Name = "miChooseLibFolder";
-            this.miChooseLibFolder.Size = new System.Drawing.Size(228, 26);
-            this.miChooseLibFolder.Text = "Choose Library Folder";
-            this.miChooseLibFolder.Click += new System.EventHandler(this.miChooseLibFolder_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 26);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toggleReadToolStripMenuItem,
-            this.toggleFavoriteToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // toggleReadToolStripMenuItem
-            // 
-            this.toggleReadToolStripMenuItem.Name = "toggleReadToolStripMenuItem";
-            this.toggleReadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.toggleReadToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
-            this.toggleReadToolStripMenuItem.Text = "Toggle Read";
-            this.toggleReadToolStripMenuItem.Click += new System.EventHandler(this.btnRead_Click);
-            // 
-            // toggleFavoriteToolStripMenuItem
-            // 
-            this.toggleFavoriteToolStripMenuItem.Name = "toggleFavoriteToolStripMenuItem";
-            this.toggleFavoriteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.toggleFavoriteToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
-            this.toggleFavoriteToolStripMenuItem.Text = "Toggle Favorite";
-            this.toggleFavoriteToolStripMenuItem.Click += new System.EventHandler(this.btnFavorite_Click);
-            // 
-            // fsWatcher
-            // 
-            this.fsWatcher.EnableRaisingEvents = true;
-            this.fsWatcher.IncludeSubdirectories = true;
-            this.fsWatcher.SynchronizingObject = this;
-            this.fsWatcher.Created += new System.IO.FileSystemEventHandler(this.fsWatcher_Created);
-            this.fsWatcher.Deleted += new System.IO.FileSystemEventHandler(this.fsWatcher_Deleted);
-            this.fsWatcher.Renamed += new System.IO.RenamedEventHandler(this.fsWatcher_Renamed);
             // 
             // MainForm
             // 
