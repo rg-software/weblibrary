@@ -80,10 +80,11 @@ namespace WebLibraryDownloader
             }
         }
 
-        private void FillLibTree(string path, TreeNodeCollection nodes)
+        private TreeNode FillLibTree(string path, TreeNodeCollection nodes)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(path);
             var dirs = dirInfo.GetDirectories().OrderBy(d => d.Name);
+            TreeNode result = null;
 
             foreach (DirectoryInfo dir in dirs)
             {
@@ -91,30 +92,35 @@ namespace WebLibraryDownloader
                 {
                     TreeNode e = new TreeNode(dir.Name);
                     nodes.Add(e);
-                    FillLibTree(Path.Combine(path, dir.Name), e.Nodes);
+                    TreeNode chResult = FillLibTree(Path.Combine(path, dir.Name), e.Nodes);
+
+                    string lsp = Properties.Settings.Default.LastSavePath;
+                    if (Path.Combine(Properties.Settings.Default.LibHome, e.FullPath) == lsp)
+                        result = e;
+                    if (chResult != null && Path.Combine(Properties.Settings.Default.LibHome, chResult.FullPath) == lsp)
+                        result = chResult;
                 }
             }
+
+            return result;
         }
 
         void updateLibTree()
         {
             tvLibTree.BeginUpdate();
             tvLibTree.Nodes.Clear();
-            FillLibTree(Properties.Settings.Default.LibHome, tvLibTree.Nodes);
+            TreeNode selectedNode = FillLibTree(Properties.Settings.Default.LibHome, tvLibTree.Nodes);
             tvLibTree.EndUpdate();
+            
             if (tvLibTree.Nodes.Count > 0)
-                tvLibTree.SelectedNode = tvLibTree.Nodes[0];
+                tvLibTree.SelectedNode = selectedNode ?? tvLibTree.Nodes[0];
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             string saveFolder = Path.Combine(Properties.Settings.Default.LibHome, tvLibTree.SelectedNode.FullPath);
+            Properties.Settings.Default.LastSavePath = saveFolder;
             saveUrl(tbUrl.Text, saveFolder);
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void saveUrl(string url, string folder)
@@ -139,12 +145,13 @@ namespace WebLibraryDownloader
                 // Start the process with the info we specified.
                 // Call WaitForExit and then the using statement will close.
                 using (Process exeProcess = Process.Start(startInfo))
-                {
+                {                          
                     exeProcess.WaitForExit();
                 }
             }
-            catch
+            catch(Exception e)
             {
+                ;
                 // Log error.
             }
 
@@ -154,6 +161,14 @@ namespace WebLibraryDownloader
         private void btnChooseChromePath_Click(object sender, EventArgs e)
         {
             ChooseChromePath();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate {
+                if (cbAutoSave.Checked && tvLibTree.SelectedNode != null)
+                    btnSave.PerformClick();
+            });
         }
     }
 }
