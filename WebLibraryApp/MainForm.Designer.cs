@@ -35,6 +35,8 @@
             this.horizSplitter = new System.Windows.Forms.SplitContainer();
             this.lvArticles = new System.Windows.Forms.ListView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnRead = new System.Windows.Forms.ToolStripButton();
+            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miChooseLibFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,8 +45,6 @@
             this.toggleReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleFavoriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fsWatcher = new System.IO.FileSystemWatcher();
-            this.btnRead = new System.Windows.Forms.ToolStripButton();
-            this.btnFavorite = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -67,14 +67,14 @@
             // 
             this.toolStripContainer.ContentPanel.Controls.Add(this.vertSplitter);
             this.toolStripContainer.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(973, 548);
+            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(973, 546);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer.LeftToolStripPanelVisible = false;
-            this.toolStripContainer.Location = new System.Drawing.Point(0, 28);
+            this.toolStripContainer.Location = new System.Drawing.Point(0, 30);
             this.toolStripContainer.Margin = new System.Windows.Forms.Padding(4);
             this.toolStripContainer.Name = "toolStripContainer";
             this.toolStripContainer.RightToolStripPanelVisible = false;
-            this.toolStripContainer.Size = new System.Drawing.Size(973, 575);
+            this.toolStripContainer.Size = new System.Drawing.Size(973, 573);
             this.toolStripContainer.TabIndex = 0;
             this.toolStripContainer.Text = "toolStripContainer1";
             // 
@@ -95,7 +95,7 @@
             // vertSplitter.Panel2
             // 
             this.vertSplitter.Panel2.Controls.Add(this.horizSplitter);
-            this.vertSplitter.Size = new System.Drawing.Size(973, 548);
+            this.vertSplitter.Size = new System.Drawing.Size(973, 546);
             this.vertSplitter.SplitterDistance = 324;
             this.vertSplitter.TabIndex = 0;
             // 
@@ -106,7 +106,7 @@
             this.tvLibTree.HideSelection = false;
             this.tvLibTree.Location = new System.Drawing.Point(0, 0);
             this.tvLibTree.Name = "tvLibTree";
-            this.tvLibTree.Size = new System.Drawing.Size(324, 548);
+            this.tvLibTree.Size = new System.Drawing.Size(324, 546);
             this.tvLibTree.TabIndex = 0;
             this.tvLibTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvLibTree_AfterSelect);
             // 
@@ -120,8 +120,8 @@
             // horizSplitter.Panel1
             // 
             this.horizSplitter.Panel1.Controls.Add(this.lvArticles);
-            this.horizSplitter.Size = new System.Drawing.Size(645, 548);
-            this.horizSplitter.SplitterDistance = 215;
+            this.horizSplitter.Size = new System.Drawing.Size(645, 546);
+            this.horizSplitter.SplitterDistance = 214;
             this.horizSplitter.TabIndex = 0;
             // 
             // lvArticles
@@ -133,7 +133,7 @@
             this.lvArticles.Location = new System.Drawing.Point(0, 0);
             this.lvArticles.MultiSelect = false;
             this.lvArticles.Name = "lvArticles";
-            this.lvArticles.Size = new System.Drawing.Size(645, 215);
+            this.lvArticles.Size = new System.Drawing.Size(645, 214);
             this.lvArticles.TabIndex = 0;
             this.lvArticles.UseCompatibleStateImageBehavior = false;
             this.lvArticles.View = System.Windows.Forms.View.Details;
@@ -157,6 +157,24 @@
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 0;
             // 
+            // btnRead
+            // 
+            this.btnRead.Image = global::WebLibraryApp.Properties.Resources.checkmark;
+            this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRead.Name = "btnRead";
+            this.btnRead.Size = new System.Drawing.Size(67, 24);
+            this.btnRead.Text = "Read";
+            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
+            // 
+            // btnFavorite
+            // 
+            this.btnFavorite.Image = global::WebLibraryApp.Properties.Resources.star;
+            this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFavorite.Name = "btnFavorite";
+            this.btnFavorite.Size = new System.Drawing.Size(85, 24);
+            this.btnFavorite.Text = "Favorite";
+            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -165,7 +183,7 @@
             this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(973, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(973, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -175,7 +193,7 @@
             this.miChooseLibFolder,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // miChooseLibFolder
@@ -198,7 +216,7 @@
             this.toggleReadToolStripMenuItem,
             this.toggleFavoriteToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 26);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // toggleReadToolStripMenuItem
@@ -225,24 +243,6 @@
             this.fsWatcher.Created += new System.IO.FileSystemEventHandler(this.fsWatcher_Created);
             this.fsWatcher.Deleted += new System.IO.FileSystemEventHandler(this.fsWatcher_Deleted);
             this.fsWatcher.Renamed += new System.IO.RenamedEventHandler(this.fsWatcher_Renamed);
-            // 
-            // btnRead
-            // 
-            this.btnRead.Image = global::WebLibraryApp.Properties.Resources.checkmark;
-            this.btnRead.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRead.Name = "btnRead";
-            this.btnRead.Size = new System.Drawing.Size(67, 24);
-            this.btnRead.Text = "Read";
-            this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
-            // 
-            // btnFavorite
-            // 
-            this.btnFavorite.Image = global::WebLibraryApp.Properties.Resources.star;
-            this.btnFavorite.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFavorite.Name = "btnFavorite";
-            this.btnFavorite.Size = new System.Drawing.Size(85, 24);
-            this.btnFavorite.Text = "Favorite";
-            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
             // 
             // MainForm
             // 
