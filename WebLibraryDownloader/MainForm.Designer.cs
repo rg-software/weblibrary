@@ -112,9 +112,11 @@
             this.cbAutoSave.TabIndex = 5;
             this.cbAutoSave.Text = "Autosave";
             this.cbAutoSave.UseVisualStyleBackColor = true;
+            this.cbAutoSave.CheckedChanged += new System.EventHandler(this.cbAutoSave_CheckedChanged);
             // 
             // btnSave
             // 
+            this.btnSave.Enabled = false;
             this.btnSave.Image = global::WebLibraryDownloader.Properties.Resources.save;
             this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSave.Location = new System.Drawing.Point(3, 3);

@@ -24,14 +24,22 @@ namespace WebLibraryDownloader
             Top = settings.MainForm_Top;
             Width = settings.MainForm_Width;
             Height = settings.MainForm_Height;
+
+            cbAutoSave.CheckedChanged -= cbAutoSave_CheckedChanged;
             cbAutoSave.Checked = settings.AutoSave;
-            // $mm TODO: save current dir 
+            cbAutoSave.CheckedChanged += cbAutoSave_CheckedChanged;
 
-            if (!Directory.Exists(settings.LibHome))    // $mm TODO: exit if no folder is chosen
+            while (!Directory.Exists(settings.LibHome))
+            {
+                MessageBox.Show("Please select a valid library folder", "WebLibraryDownloader", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ChooseLibFolder();
+            }
 
-            if (!File.Exists(settings.ChromePath))
+            while (!File.Exists(settings.ChromePath))
+            {
+                MessageBox.Show("Please select a valid path to a Chrome-compatible browser", "WebLibraryDownloader", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ChooseChromePath();
+            }
 
             updateLibTree();
         }
@@ -41,6 +49,7 @@ namespace WebLibraryDownloader
             tbUrl.ReadOnly = false;
             tbUrl.Text = url;
             tbUrl.ReadOnly = true;
+            btnSave.Enabled = true;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -61,11 +70,11 @@ namespace WebLibraryDownloader
             ChooseLibFolder();
         }
 
-
         private void ChooseLibFolder()
         {
             using (var fbd = new FolderBrowserDialog())
             {
+                fbd.Description = "Choose Library Folder";
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                     Properties.Settings.Default.LibHome = fbd.SelectedPath;
             }
@@ -75,7 +84,7 @@ namespace WebLibraryDownloader
         {
             using (var fbd = new OpenFileDialog())
             {
-                if (fbd.ShowDialog() == DialogResult.OK)// $mm TODO: check options
+                if (fbd.ShowDialog() == DialogResult.OK)
                     Properties.Settings.Default.ChromePath = fbd.FileName;
             }
         }
@@ -149,10 +158,9 @@ namespace WebLibraryDownloader
                     exeProcess.WaitForExit();
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                ;
-                // Log error.
+                // $mm TODO Log error.
             }
 
             Close();
@@ -166,9 +174,15 @@ namespace WebLibraryDownloader
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.BeginInvoke((MethodInvoker)delegate {
-                if (cbAutoSave.Checked && tvLibTree.SelectedNode != null)
+                if (cbAutoSave.Checked && tbUrl.Text.Length > 0 && tvLibTree.SelectedNode != null)
                     btnSave.PerformClick();
             });
+        }
+
+        private void cbAutoSave_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cbAutoSave.Checked)
+                MessageBox.Show("Note: to uncheck this box later, run WebLibraryDownloader without arguments", "WebLibraryDownloader", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

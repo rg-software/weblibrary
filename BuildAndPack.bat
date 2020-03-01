@@ -8,6 +8,8 @@ rmdir /q /s Release
 del WebLibrary-x64.zip
 md Release
 md Release\locales
+md Release\WebLibraryExt
+md Release\WebLibraryExt\icons
 
 copy WebLibraryApp\bin\x64\Release\locales\en-US.pak Release\locales\
 copy WebLibraryApp\bin\x64\Release\cef.pak Release\
@@ -36,6 +38,9 @@ copy WebLibraryApp\bin\x64\Release\WebLibraryApp.exe.config Release\
 copy WebLibraryDownloader\SingleFile-master.zip Release\
 copy WebLibraryDownloader\bin\Release\WebLibraryDownloader.exe Release\
 copy WebLibraryDownloader\bin\Release\WebLibraryDownloader.exe.config Release\
+
+copy WebLibraryExt\*.* Release\WebLibraryExt\
+copy WebLibraryExt\icons\*.* Release\WebLibraryExt\icons\
 
 copy SetupWebLibrary.bat Release\
 

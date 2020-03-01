@@ -62,9 +62,12 @@ namespace WebLibrary
             mArticles = new ArticleList(settings.SortByColumn, settings.ReverseSort, lvArticles, fsWatcher);
             mArticles.InitializeColWidths(colWidths);
 
-            if (!Directory.Exists(settings.LibHome))    // $mm TODO: exit if no folder is chosen
+            while (!Directory.Exists(settings.LibHome))
+            {
+                MessageBox.Show("Please select a valid library folder", "WebLibraryDownloader", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ChooseLibFolder();
-            
+            }
+
             updateLibTree();
             fsWatcher.Path = settings.LibHome;
         }
@@ -105,6 +108,7 @@ namespace WebLibrary
         {
             using (var fbd = new FolderBrowserDialog())
             {
+                fbd.Description = "Choose Library Folder";
                 if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                     Properties.Settings.Default.LibHome = fbd.SelectedPath;
             }

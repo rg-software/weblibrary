@@ -9,3 +9,4 @@ packages/**
 WebLibraryDownloader/WebLibraryDownloader.csproj.user
 WebLibraryDownloader/obj/**
 WebLibraryDownloader/bin/**
+WebLibrary-x64.zip
